@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 
 // All your own libraries here
-import './question.dart'; // The term ./ means to serach in the same directory
+import './quiz.dart'; // The term ./ means to serach in the same directory
 import './answer.dart';
+import './result.dart';
 
 // void main() {
 //   runApp(MyApp());
@@ -24,35 +25,59 @@ class _MyAppState extends State<MyApp> {
   // underscore in front of _MyAppState turns this class into private class
   // This prevents this class from being used/edited by outside code
 
-  var questions = [
+  var _questions = [
     {
       'questionText': 'What\'s your favorite color?',
-      'answers': ['Black', 'Red', 'Green', 'White'],
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 3},
+        {'text': 'White', 'score': 1},
+      ],
     },
     {
       'questionText': 'What\'s your favorite animal?',
-      'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion'],
+      'answers': [
+        {'text': 'Rabbit', 'score': 3},
+        {'text': 'Snake', 'score': 10},
+        {'text': 'Elephant', 'score': 6},
+        {'text': 'Lion', 'score': 9},
+      ],
     },
     {
       'questionText': 'What\'s your favorite instructor?',
-      'answers': ['Jack', 'Sam', 'Guy', 'Eep'],
+      'answers': [
+        {'text': 'Jack', 'score': 1},
+        {'text': 'Sam', 'score': 1},
+        {'text': 'Guy', 'score': 1},
+        {'text': 'Eep', 'score': 1},
+      ],
     },
     // The curl braces above is called Map data structure
     // similar to dictionary from python
   ];
 
   var _questionIndex = 0;
+  var _totalScore = 0;
 
-  void _answerQuestion() {
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
+
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
     print(_questionIndex);
 
-    if (_questionIndex < questions.length) {
+    if (_questionIndex < _questions.length) {
       print('We have more questions!');
-    }
-    else {
+    } else {
       print('No more questions!');
     }
   }
@@ -69,20 +94,13 @@ class _MyAppState extends State<MyApp> {
           // To help flutter auto-format nicer.
           title: Text('My Crash Course App'),
         ),
-        body: _questionIndex < questions.length ? Column(
-          children: [
-            Question(
-              questions[_questionIndex]['questionText'],
-            ),
-
-            // The ... below is called Spread Operator.
-            // It pulls all values of a list and assign each of them to children:[] list
-            ...(questions[_questionIndex]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(_answerQuestion, answer);
-            }).toList()
-          ],
-        ) : Center(child: Text('You did it!')),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }
