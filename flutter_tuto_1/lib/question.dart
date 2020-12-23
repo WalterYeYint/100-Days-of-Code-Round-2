@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 class Question extends StatelessWidget {
   final String questionText;
-  // The term 'final' prevents usr to reassign questionText
+  // The term 'final' prevents usr to reassign questionText.
+  // different from const.
+  // We don't know what value will get into questionText during development.
+  // But when the code compiles, questionText locks a value or changes value according to map in main file when it rebuilds.
 
   Question(this.questionText);
 

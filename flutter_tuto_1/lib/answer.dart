@@ -14,10 +14,10 @@ class Answer extends StatelessWidget {
         color: Colors.blue,
         textColor: Colors.white,
         child: Text(answerText),
-        // notice that there's no RoundBraces at answerQuestion method
+        onPressed: selectHandler,
+        // notice that there's no RoundBraces at selectHandler method
         // with RoundBraces, the method is immediately called; but onPressed expects a Function, not value
         // so name is given to call everytime user clicks button
-        onPressed: selectHandler,
       ),
     );
   }

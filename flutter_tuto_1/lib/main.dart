@@ -24,15 +24,37 @@ class _MyAppState extends State<MyApp> {
   // underscore in front of _MyAppState turns this class into private class
   // This prevents this class from being used/edited by outside code
 
+  var questions = [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': ['Black', 'Red', 'Green', 'White'],
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion'],
+    },
+    {
+      'questionText': 'What\'s your favorite instructor?',
+      'answers': ['Jack', 'Sam', 'Guy', 'Eep'],
+    },
+    // The curl braces above is called Map data structure
+    // similar to dictionary from python
+  ];
+
   var _questionIndex = 0;
 
   void _answerQuestion() {
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
-
-    print('Answer chosen!');
     print(_questionIndex);
+
+    if (_questionIndex < questions.length) {
+      print('We have more questions!');
+    }
+    else {
+      print('No more questions!');
+    }
   }
 
   @override // To mark that we are deliberatly overriding the existing
@@ -40,43 +62,28 @@ class _MyAppState extends State<MyApp> {
 
   //build is run everytime the screen is rebuilt
   Widget build(BuildContext context) {
-    var questions = [
-      {
-        'questionText': 'What\'s your favorite color?',
-        'answers': ['Black', 'Red', 'Green', 'White'],
-      },
-      {
-        'questionText': 'What\'s your favorite animal?',
-        'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion'],
-      },
-      {
-        'questionText': 'What\'s your favorite instructor?',
-        'answers': ['Jack', 'Sam', 'Guy', 'Eep'],
-      },
-      // The curl braces above is called Map data structure
-      // similar to dictionary from python
-    ];
     return MaterialApp(
       home: Scaffold(
-          appBar: AppBar(
-            // Comments at the ends are
-            // To help flutter auto-format nicer.
-            title: Text('My Crash Course App'),
-          ),
-          body: Column(
-            children: [
-              Question(
-                questions[_questionIndex]['questionText'],
-              ),
-
-              // The ... below is called Spread Operator.
-              // It pulls all values of a list and assign each of them to children:[] list
-              ...(questions[_questionIndex]['answers'] as List<String>).map((answer) {
-                return Answer(_answerQuestion, answer);
-              }).toList()
-            ],
-          ),
+        appBar: AppBar(
+          // Comments at the ends are
+          // To help flutter auto-format nicer.
+          title: Text('My Crash Course App'),
         ),
+        body: _questionIndex < questions.length ? Column(
+          children: [
+            Question(
+              questions[_questionIndex]['questionText'],
+            ),
+
+            // The ... below is called Spread Operator.
+            // It pulls all values of a list and assign each of them to children:[] list
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((answer) {
+              return Answer(_answerQuestion, answer);
+            }).toList()
+          ],
+        ) : Center(child: Text('You did it!')),
+      ),
     );
   }
 }
